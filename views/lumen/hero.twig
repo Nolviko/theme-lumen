@@ -1,0 +1,18 @@
+{#- Lumen home hero (2026-11-15): the site name and description from Site settings, totals on the classic
+   layout, sign-up and sign-in for guests. Context: totals ({threads, posts, forums} or null). Only core
+   translation keys and escaped values; no inline style (CSP). #}
+<section class="lm-hero" aria-labelledby="lm-hero-title">
+<div class="lm-hero-text">
+<p class="lm-eyebrow"><span class="lm-eyebrow-dot" aria-hidden="true"></span>{{ t('core.nav.forums') }}</p>
+<h2 id="lm-hero-title" class="lm-hero-title"><bdi>{{ site.name|default('') ?: 'nolviko' }}</bdi></h2>
+{% if site.description|default('') %}<p class="lm-hero-lead" dir="auto">{{ site.description }}</p>{% endif %}
+{% if not viewer.signed_in %}<p class="lm-hero-actions"><a class="btn" href="{{ path('auth.register')|safe_url }}">{{ t('core.nav.register') }}</a> <a class="btn btn-s" href="{{ path('auth.login')|safe_url }}">{{ t('core.nav.login') }}</a></p>{% endif %}
+</div>
+{% if totals|default(null) %}
+<dl class="lm-stats">
+<div class="lm-stat"><dt>{{ t('forums.index.stat_threads') }}</dt><dd>{{ totals.threads|format_number }}</dd></div>
+<div class="lm-stat"><dt>{{ t('forums.index.stat_posts') }}</dt><dd>{{ totals.posts|format_number }}</dd></div>
+<div class="lm-stat"><dt>{{ t('core.nav.forums') }}</dt><dd>{{ totals.forums|format_number }}</dd></div>
+</dl>
+{% endif %}
+</section>

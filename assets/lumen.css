@@ -1,0 +1,167 @@
+/* Lumen (2026-11-15): a light, airy Nolviko theme. Soft colour glows behind the page, a frosted sticky header,
+   pill-shaped controls, forums as floating cards and a large home hero. Every colour comes from the validated
+   tokens (tokens.json) or is mixed from them, so the site's accent setting and dark mode keep working; logical
+   properties keep right-to-left scripts correct; motion is limited and switched off for reduced motion. */
+:root {
+    --lm-glow-a: color-mix(in srgb, var(--accent) 20%, transparent);
+    --lm-glow-b: color-mix(in srgb, #ff7ab6 14%, transparent);
+    --lm-shadow: 0 1px 2px rgb(22 20 43 / .05), 0 10px 30px rgb(22 20 43 / .07);
+    --lm-shadow-hover: 0 2px 4px rgb(22 20 43 / .06), 0 18px 44px rgb(22 20 43 / .12);
+    --lm-round: 20px;
+    --lm-glass: color-mix(in srgb, var(--surface) 76%, transparent);
+}
+html[data-appearance="dark"] {
+    --lm-glow-a: color-mix(in srgb, var(--accent) 22%, transparent);
+    --lm-glow-b: color-mix(in srgb, #ff5aa5 12%, transparent);
+    --lm-shadow: 0 1px 2px rgb(0 0 0 / .4), 0 12px 32px rgb(0 0 0 / .35);
+    --lm-shadow-hover: 0 2px 4px rgb(0 0 0 / .45), 0 20px 48px rgb(0 0 0 / .45);
+}
+@media (prefers-color-scheme: dark) {
+    html[data-appearance="system"] {
+        --lm-glow-a: color-mix(in srgb, var(--accent) 22%, transparent);
+        --lm-glow-b: color-mix(in srgb, #ff5aa5 12%, transparent);
+        --lm-shadow: 0 1px 2px rgb(0 0 0 / .4), 0 12px 32px rgb(0 0 0 / .35);
+        --lm-shadow-hover: 0 2px 4px rgb(0 0 0 / .45), 0 20px 48px rgb(0 0 0 / .45);
+    }
+}
+
+/* Page */
+body {
+    background:
+        radial-gradient(64rem 30rem at 100% -8rem, var(--lm-glow-a), transparent 70%),
+        radial-gradient(50rem 26rem at -12% 4rem, var(--lm-glow-b), transparent 70%),
+        var(--bg);
+    background-repeat: no-repeat;
+    font-size: 15.5px;
+}
+h1 { letter-spacing: -0.035em; }
+h2 { letter-spacing: -0.02em; }
+
+/* Header: frosted, sticky, pill navigation */
+.top {
+    position: sticky; inset-block-start: 0; z-index: 30;
+    background: var(--lm-glass);
+    backdrop-filter: saturate(1.5) blur(16px);
+    border-block-end-color: color-mix(in srgb, var(--line) 70%, transparent);
+}
+.mark {
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 55%, #ff7ab6));
+}
+.top-nav a, .top-act a, .icon-btn { border-radius: 999px; }
+.top-search {
+    border-radius: 999px; border-color: var(--line);
+    background: color-mix(in srgb, var(--surface) 60%, var(--sunken));
+}
+.top-menu-panel { border-radius: 18px; box-shadow: var(--lm-shadow-hover); }
+
+/* Controls */
+button, .btn {
+    border-radius: 999px; padding-inline: 20px; font-weight: 650;
+    box-shadow: 0 6px 18px color-mix(in srgb, var(--accent) 28%, transparent);
+    transition: transform .15s ease, box-shadow .15s ease, background-color .15s ease;
+}
+button:hover, .btn:hover { transform: translateY(-1px); }
+.btn-s, button.btn-s, .btn-g, button.btn-g, .btn-d, button.btn-d, .icon-btn, .chip-btn, .editor-btn { box-shadow: none; }
+.btn-s, button.btn-s { border-color: var(--line); background: var(--surface); color: var(--ink); }
+.btn-sm, button.btn-sm { border-radius: 999px; }
+:where(input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]):not([type="submit"])),
+:where(select, textarea), .input { border-radius: 12px; }
+
+/* Surfaces float */
+.panel, .card {
+    border-color: color-mix(in srgb, var(--line) 75%, transparent);
+    border-radius: var(--lm-round);
+    box-shadow: var(--lm-shadow);
+}
+.panel-head { border-block-end-color: color-mix(in srgb, var(--line) 60%, transparent); }
+.chip { border-radius: 999px; padding: 3px 10px; }
+.chip-tag { background: transparent; border: 1px solid var(--line); }
+.av { border-radius: 50%; }
+.av-s, .av-l, .av-xl { border-radius: 50%; }
+.ftile {
+    border-radius: 14px;
+    background: linear-gradient(135deg, var(--accent-soft), color-mix(in srgb, #ff7ab6 16%, var(--surface)));
+}
+
+/* Home hero */
+.lumen-home > h1 { font-size: 24px; margin-block-start: 8px; }
+.lm-hero {
+    display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 32px; align-items: center;
+    padding-block: 12px 8px;
+}
+.lm-hero-text { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; min-inline-size: 0; }
+.lm-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px;
+    border: 1px solid var(--line); border-radius: 999px; background: var(--lm-glass);
+    color: var(--ink-2); font: 600 12.5px/1 var(--body); letter-spacing: .02em;
+}
+.lm-eyebrow-dot {
+    inline-size: 8px; block-size: 8px; border-radius: 50%; background: #1f9d55;
+    box-shadow: 0 0 0 4px color-mix(in srgb, #1f9d55 22%, transparent);
+}
+.lm-hero-title {
+    font: 800 clamp(40px, 6.4vw, 72px)/1 var(--display); letter-spacing: -0.045em;
+    background: linear-gradient(115deg, var(--ink) 35%, var(--accent));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    overflow-wrap: anywhere;
+}
+.lm-hero-lead { max-inline-size: 54ch; color: var(--ink-2); font-size: 18px; line-height: 1.55; }
+.lm-hero-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.lm-stats {
+    margin: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0;
+    padding: 24px 12px; border: 1px solid var(--line); border-radius: 24px;
+    background: var(--lm-glass); backdrop-filter: blur(12px); box-shadow: var(--lm-shadow);
+}
+.lm-stat { display: flex; flex-direction: column-reverse; gap: 6px; padding-inline: 16px; min-inline-size: 0; }
+.lm-stat + .lm-stat { border-inline-start: 1px solid var(--line); }
+.lm-stat dd { margin: 0; font: 800 clamp(26px, 3vw, 36px)/1 var(--display); letter-spacing: -0.03em; color: var(--ink); }
+.lm-stat dt { color: var(--ink-3); font: 600 11.5px/1.3 var(--body); letter-spacing: .1em; text-transform: uppercase; }
+
+/* Board index: categories as quiet labels, forums as floating cards */
+.forum-index { gap: 10px; }
+.forum-index > .forum-category { padding-block: 24px 4px; }
+.forum-index > .forum-category h2 {
+    display: flex; align-items: center; gap: 14px;
+    color: var(--ink-3); font: 700 12px/1.2 var(--body); letter-spacing: .14em; text-transform: uppercase;
+}
+.forum-index > .forum-category h2::after { content: ""; flex: 1; block-size: 1px; background: var(--line); }
+.forum-index > .frow, .forum-index > .frow:first-child, .forum-index > .forum-category + .frow,
+.forum-index > .frow:last-child, .forum-index > .frow:has(+ .forum-category) {
+    border: 1px solid color-mix(in srgb, var(--line) 75%, transparent);
+    border-radius: 18px; box-shadow: var(--lm-shadow);
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+.forum-index > .frow:hover { transform: translateY(-2px); box-shadow: var(--lm-shadow-hover); background: var(--surface); }
+.frow-name h2, .frow-name h3 { font-weight: 650; }
+.subforum-links a { padding: 1px 8px; border-radius: 999px; background: var(--accent-soft); text-decoration: none; }
+
+/* Discussions and thread lists */
+.thread-list .trow { padding-block: 16px; }
+.trow:hover { background: color-mix(in srgb, var(--accent-soft) 45%, transparent); }
+.trow .stat b { font: 700 17px/1.2 var(--display); }
+.feed-forum { border-radius: 10px; }
+.pagination li > a, .pagination li > span, .pagination li[aria-current] { border-radius: 999px; }
+
+/* Posts */
+.post { padding: 28px; }
+.post-body blockquote, .quote { border-radius: 16px; border-inline-start: 3px solid var(--accent); }
+pre { border-radius: 16px; }
+
+/* Footer */
+.site-footer { background: transparent; border-block-start-color: color-mix(in srgb, var(--line) 70%, transparent); }
+
+@media (max-width: 760px) {
+    .lm-hero { grid-template-columns: minmax(0, 1fr); gap: 20px; }
+    .lm-hero-lead { font-size: 16.5px; }
+    .lm-stats { padding: 16px 4px; }
+    .lm-stat { padding-inline: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    button, .btn, .forum-index > .frow { transition: none; }
+    button:hover, .btn:hover, .forum-index > .frow:hover { transform: none; }
+}
+@media (forced-colors: active) {
+    .lm-hero-title { background: none; color: CanvasText; }
+    .lm-stats, .lm-eyebrow { backdrop-filter: none; }
+}
