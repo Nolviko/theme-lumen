@@ -38,7 +38,8 @@
 <div class="last">
 <span class="av av-s c{{ (forum.lastPosterName ?? '')|length % 5 + 1 }}" aria-hidden="true">{{ (forum.lastPosterName ?? '?')|first }}</span>
 <div>
-<a class="trunc" href="{{ forum.lastThreadUrl|safe_url }}">{% if forum.lastPosterName is not null %}{{ t('forums.index.last_post', {thread: forum.lastThreadTitle|censor, poster: forum.lastPosterName, date: forum.lastPostAt|format_datetime}) }}{% else %}{{ t('forums.index.last_post_removed', {thread: forum.lastThreadTitle|censor, date: forum.lastPostAt|format_datetime}) }}{% endif %}</a>
+<a class="trunc" href="{{ forum.lastThreadUrl|safe_url }}"><bdi>{{ forum.lastThreadTitle|censor }}</bdi></a>
+<span class="meta trunc last-action">{% if forum.lastPosterName is null %}{{ t(forum.lastIsThreadStart ? 'forums.index.last_started_removed' : 'forums.index.last_replied_removed', {date: forum.lastPostAt|format_datetime}) }}{% else %}{{ t(forum.lastIsThreadStart ? 'forums.index.last_started' : 'forums.index.last_replied', {poster: forum.lastPosterName, date: forum.lastPostAt|format_datetime}) }}{% endif %}</span>
 </div>
 </div>
 {% else %}
