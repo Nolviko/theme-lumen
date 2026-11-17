@@ -20,7 +20,7 @@ scripts, reduced motion and high-contrast mode are supported.
 2. In your forum: **Admin → Themes → Import**, choose the ZIP and confirm that you trust the package.
 3. Build a draft, preview it, then publish. You can switch back to the default theme at any time.
 
-Requires [Nolviko](https://github.com/Nolviko/nolviko) 0.1.0-beta.2 or newer.
+Requires [Nolviko](https://github.com/Nolviko/nolviko) 0.1.0-beta.3 or newer (version 1.0.0 works with 0.1.0-beta.2).
 
 ## Development
 
