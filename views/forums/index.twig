@@ -1,11 +1,6 @@
-{# Lumen theme override (2026-11-15): the core template with the theme hero above it. #}
-{# Board index (M03.09; design "Forum ana sayfası"). Context: title, forums (list of ForumRowView in tree order: id,
-   category, title, depth, threadCount, postCount, lastPostAt, lastThreadTitle, lastPosterName, newThreadUrl, url,
-   lastThreadUrl, subforums: title, url), feed_url (Atom feed). Categories become section headings, forums become rows; depth is a class (no inline styles, CSP). #}
-{% extends 'layouts/page.twig' %}
-
-{% if seo.origin|default(null) and seo.canonical|default(null) %}{% set structured_data = [{'@context': 'https://schema.org', '@type': 'WebSite', name: site.name|default('') ?: title, url: seo.canonical}] %}{% endif %}
-{% block head %}{% if feed_url|default(null) %}<link rel="alternate" type="application/atom+xml" href="{{ feed_url|safe_url }}">{% endif %}{% endblock %}
+{#- Lumen theme override (1.0.3, 2026-11-27): extends the core board index and puts the theme hero above it, so the
+   core's links, birthdays and extension slots (forum.row.after and others) stay in this theme. #}
+{% extends '@core/forums/index.twig' %}
 
 {% block content %}
 {% set listed = forums|filter(forum => not forum.category) %}
@@ -13,46 +8,6 @@
     posts: listed|reduce((sum, forum) => sum + forum.postCount, 0), forums: listed|length} %}
 <div class="lumen-home stack-l">
 {% include 'lumen/hero.twig' with {totals: totals} %}
-<h1 dir="auto">{{ title }}</h1>
-{{ theme_slot('forum.list.before', {forums: forums}) }}
-{% if forums is empty %}
-<div class="panel empty">
-<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"></path></svg>
-<p>{{ t('forums.index.empty') }}</p>
-</div>
-{% else %}
-<ul class="forum-index">
-{% for forum in forums %}
-{% if forum.category %}
-<li class="forum-depth-{{ forum.depth }} forum-category"><h2><bdi>{{ forum.title }}</bdi></h2></li>
-{% else %}
-<li class="forum-depth-{{ forum.depth }} frow{{ forum.depth > 1 ? ' frow-sub' : '' }}">
-<div class="frow-name">
-<span class="ftile" aria-hidden="true">{{ forum.title|first }}</span>
-<div class="frow-text">{% if forum.depth == 0 %}<h2>{% else %}<h3>{% endif %}<a href="{{ forum.url|safe_url }}"><bdi>{{ forum.title }}</bdi></a>{% if forum.depth == 0 %}</h2>{% else %}</h3>{% endif %}
-{% if forum.description|default(null) %}<p class="meta" dir="auto">{{ forum.description }}</p>{% endif %}
-{% if forum.subforums|default([]) is not empty %}<p class="meta subforum-links"><span>{{ t('forums.index.subforums') }}</span> {% for child in forum.subforums %}<a href="{{ child.url|safe_url }}"><bdi>{{ child.title }}</bdi></a>{% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}</div>
-</div>
-<p class="stat"><span>{{ t('forums.index.threads', {count: forum.threadCount}) }} · {{ t('forums.index.posts', {count: forum.postCount}) }}</span></p>
-{% if forum.lastThreadTitle is not null and forum.lastPostAt is not null %}
-<div class="last">
-<span class="av av-s c{{ (forum.lastPosterName ?? '')|length % 5 + 1 }}" aria-hidden="true">{{ (forum.lastPosterName ?? '?')|first }}</span>
-<div>
-<a class="trunc" href="{{ forum.lastThreadUrl|safe_url }}"><bdi>{{ forum.lastThreadTitle|censor }}</bdi></a>
-<span class="meta trunc last-action">{% if forum.lastPosterName is null %}{{ t(forum.lastIsThreadStart ? 'forums.index.last_started_removed' : 'forums.index.last_replied_removed', {date: forum.lastPostAt|format_datetime}) }}{% else %}{{ t(forum.lastIsThreadStart ? 'forums.index.last_started' : 'forums.index.last_replied', {poster: forum.lastPosterName, date: forum.lastPostAt|format_datetime}) }}{% endif %}</span>
-</div>
-</div>
-{% else %}
-<p class="last meta">{{ t('forums.index.no_posts') }}</p>
-{% endif %}
-{% if forum.newThreadUrl is not null %}
-<a class="btn btn-g btn-sm" href="{{ forum.newThreadUrl|safe_url }}">{{ t('forums.index.new_thread') }}</a>
-{% else %}<span aria-hidden="true"></span>{% endif %}
-</li>
-{% endif %}
-{% endfor %}
-</ul>
-{% endif %}
-{{ theme_slot('forum.list.after', {forums: forums}) }}
+{{ parent() }}
 </div>
 {% endblock %}

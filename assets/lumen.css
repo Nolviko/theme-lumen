@@ -85,7 +85,7 @@ button:hover, .btn:hover { transform: translateY(-1px); }
 }
 
 /* Home hero */
-.lumen-home > h1 { font-size: 24px; margin-block-start: 8px; }
+.lumen-home > h1, .lumen-home > .head-row h1 { font-size: 24px; margin-block-start: 8px; }
 .lm-hero {
     display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 32px; align-items: center;
     padding-block: 12px 8px;

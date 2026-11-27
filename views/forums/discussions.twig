@@ -1,73 +1,9 @@
-{# Lumen theme override (2026-11-15): the core template with the theme hero above it. #}
-{# Home page, discussions layout (site setting `home.layout`, 2026-11-08). Context: title, feed_url (Atom feed), indexable (false on
-   `?after=` pages), discussions (list of DiscussionRowView: title, url, locked, lastPostAt, authorName,
-   lastPosterName, replies, forumTitle, forumUrl, unread, views, prefix (label, class), tags (name, url)), tag_list
-   (sidebar tags: name, url, current), more (next page URL or null), forums (sidebar in tree
-   order: title, url (null for categories), sub). No votes or scores by owner decision. The canonical tag comes
-   from SeoMetadata. #}
-{% extends 'layouts/page.twig' %}
-
-{% if seo.origin|default(null) and seo.canonical|default(null) %}{% set structured_data = [{'@context': 'https://schema.org', '@type': 'WebSite', name: site.name|default('') ?: title, url: seo.canonical}] %}{% endif %}
-{% block head %}{% if feed_url|default(null) %}<link rel="alternate" type="application/atom+xml" href="{{ feed_url|safe_url }}">{% endif %}{% if not indexable %}<meta name="robots" content="noindex, follow">{% endif %}{% endblock %}
+{#- Lumen theme override (1.0.3, 2026-11-27): extends the core discussions page and puts the theme hero above it. #}
+{% extends '@core/forums/discussions.twig' %}
 
 {% block content %}
 <div class="lumen-home stack-l">
 {% include 'lumen/hero.twig' with {totals: null} %}
-<h1 dir="auto">{{ title }}</h1>
-<div class="cols">
-<div class="stack">
-{% if discussions is empty %}
-<div class="panel empty"><p>{{ t('forums.feed.empty') }}</p></div>
-{% else %}
-<ul class="panel thread-list">
-{% for discussion in discussions %}
-<li class="trow{{ discussion.unread ? ' t-unread' : '' }}">
-<span class="av c{{ (discussion.authorName ?? '')|length % 5 + 1 }}" aria-hidden="true">{{ (discussion.authorName ?? '?')|first }}</span>
-<div class="trow-main">
-<div class="trow-title">
-{% if discussion.unread %}<span class="dot" aria-hidden="true"></span>{% endif %}
-{% if discussion.prefix %}<span class="{{ discussion.prefix.class }}"><bdi>{{ discussion.prefix.label }}</bdi></span>{% endif %}
-<a href="{{ discussion.url|safe_url }}"><bdi>{{ discussion.title|censor }}</bdi></a>
-{% if discussion.unread %}<span class="chip chip-new thread-unread">{{ t('forums.show.unread') }}</span>{% endif %}
-{% if discussion.forumUrl is not null %}<a class="chip" href="{{ discussion.forumUrl|safe_url }}"><bdi>{{ discussion.forumTitle }}</bdi></a>{% endif %}
-{% for tag in discussion.tags %}<a class="chip chip-tag" href="{{ tag.url|safe_url }}">#<bdi>{{ tag.name }}</bdi></a>{% endfor %}
-{% if discussion.locked %}<span class="chip">{{ t('forums.show.locked') }}</span>{% endif %}
-</div>
-{% if discussion.lastPostAt is not null %}
-<p class="meta">{% if discussion.lastPosterAvatar|default(null) %}<img class="av av-s" src="{{ discussion.lastPosterAvatar|safe_url }}" width="22" height="22" loading="lazy" alt="">{% endif %}{{ t('forums.show.activity', {author: discussion.authorName ?? t('threads.show.removed_account'), poster: discussion.lastPosterName ?? t('threads.show.removed_account'), date: discussion.lastPostAt|format_datetime}) }}</p>
-{% endif %}
-</div>
-<div class="stat"><b>{{ discussion.replies|format_number }}</b><span>{{ t('forums.show.replies', {count: discussion.replies}) }}</span></div>
-{% if discussion.views is not null %}<div class="stat"><b>{{ discussion.views|format_number }}</b><span>{{ t('forums.show.views', {count: discussion.views}) }}</span></div>{% endif %}
-</li>
-{% endfor %}
-</ul>
-{% endif %}
-{% if more is not null %}
-<nav aria-label="{{ t('forums.show.pages') }}">
-<ul class="pagination"><li><a rel="next" href="{{ more|safe_url }}" class="btn btn-s">{{ t('forums.feed.more') }}</a></li></ul>
-</nav>
-{% endif %}
-</div>
-{% if forums is not empty or tag_list|default([]) is not empty %}
-<aside aria-labelledby="feed-forums-heading">
-<h2 id="feed-forums-heading">{{ t('forums.feed.forums') }}</h2>
-<ul class="panel list feed-forums">
-{% for forum in forums %}
-{% if forum.url is null %}<li class="feed-category"><bdi>{{ forum.title }}</bdi></li>
-{% else %}<li{% if forum.sub %} class="feed-sub"{% endif %}><a class="feed-forum" href="{{ forum.url|safe_url }}"><bdi>{{ forum.title }}</bdi></a></li>
-{% endif %}
-{% endfor %}
-</ul>
-{% if tag_list|default([]) is not empty %}
-<h2 id="feed-tags-heading">{{ t('forums.feed.tags') }}</h2>
-<ul class="panel list feed-forums" aria-labelledby="feed-tags-heading">
-{% for tag in tag_list %}<li><a class="feed-forum" href="{{ tag.url|safe_url }}"{% if tag.current %} aria-current="page"{% endif %}>#<bdi>{{ tag.name }}</bdi></a></li>
-{% endfor %}
-</ul>
-{% endif %}
-</aside>
-{% endif %}
-</div>
+{{ parent() }}
 </div>
 {% endblock %}

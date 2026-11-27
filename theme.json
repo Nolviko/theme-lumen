@@ -1,7 +1,7 @@
 {
   "id": "lumen",
   "parent": "default",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "engine": 1,
   "minimum_php": "8.4.27",
   "assets": [
@@ -9,7 +9,7 @@
   ],
   "slots": [],
   "upstream": {
-    "forums/index.twig": "eabe0006df7b3224a373af9b6c5ab2da70517807091e11e2eefec88482bc76c9",
+    "forums/index.twig": "d5241d5a83e371ac62479b161ced7789c65134caf2643611dfeb85965c31e642",
     "forums/discussions.twig": "fdfbc55ca5dbdffd5de689e1a516146ea70ece81d3827a40546321a51b287b74",
     "lumen/hero.twig": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
   },
